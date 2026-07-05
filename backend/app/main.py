@@ -1,10 +1,20 @@
 from fastapi import FastAPI
 
-app = FastAPI(title="AI Job Search Assistant")
+from app.core.config import settings
+
+app = FastAPI(title=settings.APP_NAME)
 
 
 @app.get("/")
 def root():
     return {
-        "message": "Backend is running"
+        "application": settings.APP_NAME,
+        "status": "running"
+    }
+
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy"
     }
