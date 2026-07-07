@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.api.v1.endpoints.google import router as google_router
 
 from app.api.v1.endpoints.auth import router as auth_router
 from app.api.v1.endpoints.users import router as users_router
@@ -20,6 +21,11 @@ app.include_router(
     tags=["Users"],
 )
 
+app.include_router(
+    google_router,
+    prefix="/api/v1/google",
+    tags=["Google"],
+)
 
 @app.get("/")
 def root():

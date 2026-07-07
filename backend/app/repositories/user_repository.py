@@ -14,11 +14,22 @@ class UserRepository:
         self.db.refresh(user)
         return user
 
+    def get(self, user_id: int):
+        return (
+            self.db.query(User)
+            .filter(User.id == user_id)
+            .first()
+        )
+
     def get_all(self):
         return self.db.query(User).all()
 
     def get_by_id(self, user_id: int):
-        return self.db.query(User).filter(User.id == user_id).first()
+        return (
+            self.db.query(User)
+            .filter(User.id == user_id)
+            .first()
+        )
 
     def get_by_email(self, email: str):
         return (

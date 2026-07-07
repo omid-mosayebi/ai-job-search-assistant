@@ -6,6 +6,7 @@ from app.dependencies.database import get_database
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
 from app.services.user_service import UserService
+from app.dependencies.auth import get_current_user
 
 router = APIRouter()
 
@@ -27,3 +28,11 @@ def create_user(
     service = UserService(repository)
 
     return service.create_user(user)
+
+@router.get(
+    "/me",
+)
+def current_user(
+    user=Depends(get_current_user),
+):
+    return user

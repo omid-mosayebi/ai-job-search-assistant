@@ -1,5 +1,5 @@
-from sqlalchemy import Boolean
 from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.sql import func
@@ -11,9 +11,9 @@ from sqlalchemy.orm import relationship
 from app.db.base import Base
 
 
-class User(Base):
+class GoogleAccount(Base):
 
-    __tablename__ = "users"
+    __tablename__ = "google_accounts"
 
     id: Mapped[int] = mapped_column(
         Integer,
@@ -21,23 +21,33 @@ class User(Base):
         index=True,
     )
 
-    email: Mapped[str] = mapped_column(
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=False,
+    )
+
+    google_email: Mapped[str] = mapped_column(
         String(255),
         unique=True,
         nullable=False,
     )
 
-    full_name: Mapped[str] = mapped_column(
+    google_user_id: Mapped[str] = mapped_column(
         String(255),
+        unique=True,
+        nullable=False,
     )
 
-    password_hash: Mapped[str] = mapped_column(
-        String(255),
+    access_token: Mapped[str] = mapped_column(
+        String(2048),
     )
 
-    is_active: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True,
+    refresh_token: Mapped[str] = mapped_column(
+        String(2048),
+    )
+
+    token_expiry: Mapped[DateTime] = mapped_column(
+        DateTime(timezone=True),
     )
 
     created_at: Mapped[DateTime] = mapped_column(
@@ -51,14 +61,7 @@ class User(Base):
         onupdate=func.now(),
     )
 
-    google_accounts = relationship(
-        "GoogleAccount",
-        back_populates="user",
-        cascade="all, delete-orphan",
-    )
-
-    emails = relationship(
-        "Email",
-        back_populates="user",
-        cascade="all, delete-orphan",
-    )
+    user = relationship(
+    "User",
+    back_populates="google_accounts",
+)
